@@ -1,0 +1,40 @@
+# Local development/testing states
+.crom/
+.env
+.env.*
+!.env.example
+
+# IDEs & OS files
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# Go SDK ignore
+go/bin/
+go/*.test
+go/*.out
+
+# Python SDK ignore
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache/
+**/venv/
+**/.venv/
+**/env/
+**/dist/
+**/build/
+**/*.egg-info/
+
+# TypeScript/JavaScript SDK ignore
+**/node_modules/
+**/dist/
+**/out/
+**/.npm/
+**/*.log
+
+# Rust SDK ignore
+**/target/
+Cargo.lock.unused
