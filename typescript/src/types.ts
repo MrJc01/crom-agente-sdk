@@ -107,6 +107,17 @@ export interface TokenUsage {
   total_tokens: number;
 }
 
+// ─── MCP Server Status ───
+
+/** Estado atual de um servidor MCP */
+export interface MCPServerStatus {
+  name: string;
+  mode: "subprocess" | "sse";
+  tool_count: number;
+  tools: string[];
+  running: boolean;
+}
+
 // ─── Protocolo IPC/WebSocket ───
 
 /** Mensagem enviada pelo cliente ao daemon */
