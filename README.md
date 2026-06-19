@@ -23,6 +23,19 @@ O SDK abstrai e encapsula os quatro principais canais de comunicação fornecido
 
 ---
 
+## ⚠️ Restrição de Compilação do Go SDK
+
+Como o SDK em Go (`/go`) importa pacotes estruturais internos (`internal/...`) do orquestrador principal, as regras do compilador Go impedem que esses arquivos sejam compilados de forma autônoma como parte de um módulo Go externo (como o `github.com/crom/crom-agente-sdk/go`).
+
+Para utilizar e compilar o Go SDK ou rodar seus testes locais de desenvolvimento:
+1. Sempre use o caminho de importação a partir do repositório principal: `github.com/crom/crom-agente/pkg/sdk`.
+2. Rode os testes e builds a partir da pasta raiz do repositório principal (`crom-agente`):
+   ```bash
+   go test -v -tags headless ./pkg/sdk/...
+   ```
+
+---
+
 ## ⚡ Exemplo de Uso (Python SDK Concept)
 
 ```python
