@@ -1,0 +1,38 @@
+{
+  "name": "crom-agente-sdk",
+  "version": "0.1.0",
+  "description": "SDK oficial em TypeScript para integração com o ecossistema crom-agente",
+  "type": "module",
+  "main": "./dist/crom-agente-sdk.umd.cjs",
+  "module": "./dist/crom-agente-sdk.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/crom-agente-sdk.js",
+      "require": "./dist/crom-agente-sdk.umd.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build && tsc --emitDeclarationOnly",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "crom",
+    "agente",
+    "sdk",
+    "typescript"
+  ],
+  "author": "CromIA",
+  "license": "CUSTOM",
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "vite": "^5.1.4",
+    "vite-plugin-dts": "^3.7.3",
+    "vitest": "^1.3.1"
+  }
+}
