@@ -43,11 +43,17 @@ describe("CromClient System & Daemon API", () => {
   it("should retrieve tags (Ollama models)", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ["llama3", "codellama"],
+      json: async () => ({
+        models: [
+          { name: "llama3" },
+          { name: "codellama" }
+        ]
+      }),
     });
 
-    const tags = await client.getTags();
-    expect(tags).toContain("llama3");
+    const data = await client.getTags();
+    expect(data.models).toHaveLength(2);
+    expect(data.models[0].name).toBe("llama3");
 
     const calledUrl = mockFetch.mock.calls[0][0];
     expect(calledUrl).toContain("/api/tags");

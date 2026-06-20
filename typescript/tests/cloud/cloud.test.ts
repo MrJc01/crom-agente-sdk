@@ -45,12 +45,15 @@ describe("CromClient Cloud & Third-Party APIs", () => {
   it("should get cloud models list with Authorization header", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => [{ id: "model-a" }, { id: "model-b" }],
+      json: async () => ({
+        object: "list",
+        data: [{ id: "model-a" }, { id: "model-b" }]
+      }),
     });
 
-    const models = await client.getCloudModels();
-    expect(models).toHaveLength(2);
-    expect(models[0].id).toBe("model-a");
+    const res = await client.getCloudModels();
+    expect(res.data).toHaveLength(2);
+    expect(res.data[0].id).toBe("model-a");
 
     expect(mockFetch).toHaveBeenCalledWith(
       "https://cloud.ia.crom.run/api/v1/models",
