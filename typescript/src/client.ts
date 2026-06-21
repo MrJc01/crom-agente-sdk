@@ -284,8 +284,8 @@ export class CromClient {
     return res.json();
   }
 
-  async getLatestRelease(): Promise<any> {
-    const url = this.buildCloudUrl("/api/v1/releases/latest");
+  async getLatestRelease(repo: string = "crom-agente"): Promise<any> {
+    const url = this.buildCloudUrl(`/api/v1/github/releases?repo=${repo}`);
     const res = await fetch(url);
     if (!res.ok) throw new Error(`Failed to fetch latest release: ${res.statusText}`);
     return res.json();
