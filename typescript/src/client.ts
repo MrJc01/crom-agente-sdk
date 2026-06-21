@@ -248,7 +248,7 @@ export class CromClient {
     return res.text();
   }
 
-  async writeFile(filePath: string, content: string): Promise<any> {
+  async writeFile(filePath: string, content: string, encoding?: string): Promise<any> {
     const url = this.buildDaemonUrl("/api/file");
     const res = await fetch(url, {
       method: "POST",
@@ -258,6 +258,7 @@ export class CromClient {
       body: JSON.stringify({
         path: filePath,
         content: content,
+        encoding: encoding
       }),
     });
     if (!res.ok) throw new Error(`Failed to write file: ${res.statusText}`);
