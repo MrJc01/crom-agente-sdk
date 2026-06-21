@@ -73,7 +73,7 @@ describe("CromClient Cloud & Third-Party APIs", () => {
     expect(rel.version).toBe("v1.2.3");
 
     expect(mockFetch).toHaveBeenCalledWith(
-      "https://cloud.ia.crom.run/api/v1/releases/latest"
+      "https://cloud.ia.crom.run/api/v1/github/releases?repo=crom-agente"
     );
   });
 
