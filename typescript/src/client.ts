@@ -148,6 +148,27 @@ export class CromClient {
     return res.json();
   }
 
+  async getTerminalBuffer(terminalId: string): Promise<string> {
+    const url = this.buildDaemonUrl("/api/terminal/buffer", { id: terminalId });
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Failed to fetch terminal buffer: ${res.statusText}`);
+    return res.text();
+  }
+
+  async getTerminalInfo(terminalId: string): Promise<any> {
+    const url = this.buildDaemonUrl("/api/terminal/info", { id: terminalId });
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Failed to fetch terminal info: ${res.statusText}`);
+    return res.json();
+  }
+
+  async getProjectFiles(projectPath: string): Promise<any[]> {
+    const url = this.buildDaemonUrl("/api/project/files", { path: projectPath });
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Failed to fetch project files: ${res.statusText}`);
+    return res.json();
+  }
+
   async stopDaemon(workspace?: string): Promise<any> {
     const url = this.buildDaemonUrl("/stop");
     const body = workspace ? JSON.stringify({ workspace }) : undefined;
