@@ -16,7 +16,11 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
+      - run: |
+          pwd
+          ls -la
+          ls -la ..
+          npm ci
         working-directory: typescript
       - run: npm run build
         working-directory: typescript
