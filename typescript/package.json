@@ -1,6 +1,6 @@
 {
   "name": "crom-agente-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1-alpha.1",
   "description": "SDK oficial em TypeScript para integração com o ecossistema crom-agente",
   "type": "module",
   "main": "./dist/crom-agente-sdk.umd.cjs",
