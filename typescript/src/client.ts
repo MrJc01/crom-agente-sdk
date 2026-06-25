@@ -1,4 +1,4 @@
-import { AgentEvent, AgentErrorCode, MCPServerStatus, IPCMessage, IPCResponse } from "./types.js";
+import { AgentEvent, AgentErrorCode, MCPServerStatus, IPCMessage, IPCResponse, AgentTelemetry } from "./types.js";
 import { parseDaemonPayload } from "./utils.js";
 
 export interface CromClientOptions {
@@ -530,5 +530,50 @@ export class CromClient {
         remember: false
       }
     }));
+  }
+
+  async getAgentTelemetry(workspace: string): Promise<AgentTelemetry> {
+    const url = this.buildDaemonUrl("/api/agent/telemetry", { workspace });
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Failed to fetch agent telemetry: ${res.statusText}`);
+    return res.json();
+  }
+
+  streamAgentTelemetry(workspace: string, onUpdate: (telemetry: AgentTelemetry) => void): () => void {
+    const host = this.options.daemonHost;
+    const port = this.options.daemonPort;
+    const token = this.options.sessionToken || this.options.daemonToken;
+    const wsProto = typeof window !== "undefined" && window.location?.protocol === "https:" ? "wss:" : "ws:";
+    const params = new URLSearchParams({ workspace });
+    if (token) {
+      params.set("token", token);
+    }
+    const wsUrl = `${wsProto}//${host}:${port}/api/agent/telemetry/ws?${params.toString()}`;
+
+    const WebSocketImpl = this.options.WebSocketConstructor || (typeof window !== "undefined" ? window.WebSocket : null);
+    if (!WebSocketImpl) {
+      throw new Error("No WebSocket constructor available. Pass one in options for Node environment.");
+    }
+
+    const socket = new WebSocketImpl(wsUrl);
+
+    socket.onmessage = (event: any) => {
+      try {
+        const data = JSON.parse(event.data);
+        onUpdate(data);
+      } catch (err) {
+        console.error("Error parsing telemetry stream message:", err);
+      }
+    };
+
+    socket.onerror = (err: any) => {
+      console.error("Telemetry WebSocket error:", err);
+    };
+
+    return () => {
+      socket.onmessage = null;
+      socket.onerror = null;
+      socket.close();
+    };
   }
 }

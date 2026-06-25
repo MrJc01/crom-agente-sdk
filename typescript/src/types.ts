@@ -191,3 +191,70 @@ export const ERROR_ACTIONS: Record<AgentErrorCode, string> = {
   ERR_CONSECUTIVE_FAILURES: "Muitas falhas consecutivas. Verifique a configuração e os logs.",
   ERR_CONTEXT_CANCELED: "A execução foi cancelada pelo usuário ou pelo sistema.",
 };
+
+// ─── Novas Interfaces de Telemetria e Estado ───
+
+export interface TerminalTelemetry {
+  id: string;
+  pid: number;
+  name: string;
+  closed: boolean;
+  updated_at: string;
+}
+
+export interface ProcessTelemetry {
+  id: string;
+  command: string;
+  pid: number;
+  status: "running" | "completed" | "failed" | "killed";
+  started_at: string;
+  is_background: boolean;
+}
+
+export interface TaskItem {
+  title: string;
+  description?: string;
+  status: "pending" | "in_progress" | "completed" | "failed";
+}
+
+export interface AgentState {
+  id?: string;
+  name?: string;
+  status?: string;
+  diretorio_atual: string;
+  arquivos_focados: string[];
+  tarefa_em_andamento: string;
+  ultimo_status: string;
+  status_operacional: string;
+  modo_cognitivo: string;
+  logs_relevantes: string[];
+  tokens_gastos: number;
+  total_turnos: number;
+  timestamp: string;
+  messages?: any[];
+  plan?: TaskItem[];
+  browser_url?: string;
+  subagents_context?: Record<string, string>;
+  files_created: number;
+  files_validated: number;
+  tool_calls_emitted: number;
+  tool_calls_from_text_parse: number;
+  circuit_breaker_triggered: boolean;
+  active_terminals: TerminalTelemetry[];
+  active_processes: ProcessTelemetry[];
+  current_step: string;
+  current_step_duration_ms: number;
+}
+
+export interface BrowserTelemetry {
+  active: boolean;
+  url: string;
+}
+
+export interface AgentTelemetry {
+  workspace_name: string;
+  is_running: boolean;
+  agent_state: AgentState;
+  browser: BrowserTelemetry;
+  mcp_servers: MCPServerStatus[];
+}
