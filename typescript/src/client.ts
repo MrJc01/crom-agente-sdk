@@ -325,7 +325,14 @@ export class CromClient {
     activeSessionId?: string,
     initialPrompt?: string,
     defaultProvider?: string,
-    defaultModel?: string
+    defaultModel?: string,
+    extraConfig?: {
+      maxIterations?: number;
+      maxConsecutiveFail?: number;
+      toolTimeoutSeconds?: number;
+      browserHeadless?: boolean;
+      disablePromptOptimization?: boolean;
+    }
   ) {
     this.disconnectWebSocket();
 
@@ -360,7 +367,12 @@ export class CromClient {
           session: activeSessionId,
           task: initialPrompt,
           provider: defaultProvider,
-          model: defaultModel
+          model: defaultModel,
+          max_iterations: extraConfig?.maxIterations,
+          max_consecutive_fail: extraConfig?.maxConsecutiveFail,
+          tool_timeout_seconds: extraConfig?.toolTimeoutSeconds,
+          browser_headless: extraConfig?.browserHeadless,
+          disable_prompt_optimization: extraConfig?.disablePromptOptimization,
         }));
         this.emit("prompt_sent", { prompt: initialPrompt });
       }
@@ -398,6 +410,14 @@ export class CromClient {
               } else if (payload.type === "ask_permission") {
                 eventType = "permission_request";
                 eventData = { action: payload.action, target: payload.target };
+              } else if (payload.type === "reasoning_thinking") {
+                eventType = "reasoning_thinking";
+                eventData = {
+                  iteration: payload.iteration || 0,
+                  max_iterations: payload.max_iterations || 0,
+                  thought: payload.thought || payload.content || "",
+                  agent_id: payload.agent_id || "",
+                };
               } else if (payload.type === "message") {
                 eventType = "message";
                 eventData = payload;
@@ -490,7 +510,21 @@ export class CromClient {
     }
   }
 
-  sendRun(workspacePath: string, sessionId: string, task: string, provider?: string, model?: string, autoApprove?: boolean) {
+  sendRun(
+    workspacePath: string,
+    sessionId: string,
+    task: string,
+    provider?: string,
+    model?: string,
+    autoApprove?: boolean,
+    extraConfig?: {
+      maxIterations?: number;
+      maxConsecutiveFail?: number;
+      toolTimeoutSeconds?: number;
+      browserHeadless?: boolean;
+      disablePromptOptimization?: boolean;
+    }
+  ) {
     if (!this.ws || this.ws.readyState !== 1) throw new Error("WebSocket not connected");
     this.ws.send(JSON.stringify({
       type: "run",
@@ -499,7 +533,12 @@ export class CromClient {
       task,
       provider,
       model,
-      auto_approve: autoApprove
+      auto_approve: autoApprove,
+      max_iterations: extraConfig?.maxIterations,
+      max_consecutive_fail: extraConfig?.maxConsecutiveFail,
+      tool_timeout_seconds: extraConfig?.toolTimeoutSeconds,
+      browser_headless: extraConfig?.browserHeadless,
+      disable_prompt_optimization: extraConfig?.disablePromptOptimization,
     }));
   }
 
