@@ -18,7 +18,7 @@ O SDK abstrai e encapsula os quatro principais canais de comunicação fornecido
 
 * **Go SDK** (Bindings Nativos): Disponíveis no diretório `/go`.
 * **Python SDK**: Disponível no diretório `/python` (otimizado para integração de scripts de automação e ferramentas de IA externas).
-* **TypeScript SDK**: Disponível no diretório `/typescript` (projetado para extensões do VS Code e aplicativos web headless).
+* **TypeScript SDK**: Disponível no diretório `/typescript`. Este SDK inclui a classe principal `CromClient` para se comunicar com o daemon e a nova abstração `CromEcosystem`, desenvolvida para uso isomórfico (Tauri ou Node.js). O ecossistema unifica o gerenciamento de binários do Daemon, instalação do Ollama e adaptadores de processos baseados no ambiente em tempo de execução.
 * **Rust SDK**: Disponível no diretório `/rust` (para bindings de ultra performance e segurança).
 
 ---
@@ -57,6 +57,28 @@ print(response.output)
 
 # Encerra a gravação
 client.record.stop()
+```
+
+---
+
+## ⚡ Exemplo de Uso (TypeScript SDK)
+
+No Typescript, o SDK fornece o `CromEcosystem` que orquestra tudo, desde a detecção do ambiente onde a aplicação está rodando até a comunicação com os binários locais:
+
+```typescript
+import { CromEcosystem, EnvironmentType } from "crom-agente-sdk";
+
+// Inicializa o ecossistema e auto-detecta se está no Node.js, Browser ou Tauri
+const ecosystem = new CromEcosystem();
+
+// Inicia o Daemon (ele baixa automaticamente do GitHub caso não esteja instalado)
+await ecosystem.daemon.start({
+  onLog: (log) => console.log(log)
+});
+
+// A partir daqui, você pode usar o client do SDK para manipular o Daemon
+const client = ecosystem.client;
+client.agent.execute({ prompt: "Faça um checklist das tarefas a seguir..." });
 ```
 
 ---

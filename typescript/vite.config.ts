@@ -11,7 +11,7 @@ export default defineConfig({
       formats: ["es", "umd"],
     },
     rollupOptions: {
-      external: [],
+      external: ["fs/promises", "child_process", "util", "os", "path"],
       output: {
         globals: {},
       },
