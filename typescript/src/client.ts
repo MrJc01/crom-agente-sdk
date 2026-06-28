@@ -578,12 +578,29 @@ export class CromClient {
     return res.json();
   }
 
-  streamAgentTelemetry(workspace: string, onUpdate: (telemetry: AgentTelemetry) => void): () => void {
+  streamAgentTelemetry(
+    workspace: string,
+    sessionOrOnUpdate: string | undefined | ((telemetry: AgentTelemetry) => void),
+    onUpdate?: (telemetry: AgentTelemetry) => void
+  ): () => void {
+    let session: string | undefined;
+    let callback: (telemetry: AgentTelemetry) => void;
+
+    if (typeof sessionOrOnUpdate === "function") {
+      callback = sessionOrOnUpdate;
+    } else {
+      session = sessionOrOnUpdate;
+      callback = onUpdate!;
+    }
+
     const host = this.options.daemonHost;
     const port = this.options.daemonPort;
     const token = this.options.sessionToken || this.options.daemonToken;
     const wsProto = typeof window !== "undefined" && window.location?.protocol === "https:" ? "wss:" : "ws:";
     const params = new URLSearchParams({ workspace });
+    if (session) {
+      params.set("session", session);
+    }
     if (token) {
       params.set("token", token);
     }
@@ -599,7 +616,7 @@ export class CromClient {
     socket.onmessage = (event: any) => {
       try {
         const data = JSON.parse(event.data);
-        onUpdate(data);
+        if (callback) callback(data);
       } catch (err) {
         console.error("Error parsing telemetry stream message:", err);
       }
