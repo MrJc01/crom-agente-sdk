@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cromia-sdk"
-version = "0.1.0"
+version = "0.1.1"
 description = "SDK oficial em Python para integração com o ecossistema crom-agente"
 authors = ["CromIA <mrj.crom@gmail.com>"]
 readme = "README.md"

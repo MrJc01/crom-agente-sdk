@@ -1,6 +1,6 @@
 [package]
 name = "cromia-sdk"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "SDK oficial em Rust para integração com o ecossistema crom-agente"
 authors = ["CromIA <mrj.crom@gmail.com>"]
